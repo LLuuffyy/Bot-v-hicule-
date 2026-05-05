@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #222; max-width: 760px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 20px; margin-bottom: 4px; }
+.subtitle { color: #666; margin-top: 0; font-size: 13px; }
+.card { border: 1px solid #e1e1e1; border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; gap: 12px; }
+.card img { width: 140px; height: 100px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #f4f4f4; }
+.card-body { flex: 1; min-width: 0; }
+.title { font-weight: 600; font-size: 15px; margin: 0 0 4px; }
+.title a { color: #1a4ea8; text-decoration: none; }
+.meta { color: #555; font-size: 13px; margin: 2px 0; }
+.price { font-size: 18px; font-weight: 700; color: #1a7a32; }
+.delta-good { color: #1a7a32; font-weight: 600; }
+.delta-bad { color: #b03a2e; }
+.score { display: inline-block; background: #f0f5ff; color: #1a4ea8; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.flags { margin-top: 6px; }
+.flag { display: inline-block; background: #fff8d6; padding: 2px 6px; margin-right: 4px; border-radius: 4px; font-size: 11px; }
+.footer { color: #888; font-size: 11px; margin-top: 24px; border-top: 1px solid #eee; padding-top: 8px; }
+</style>
+</head>
+<body>
+<h1>{{ count }} nouvelle{{ 's' if count > 1 else '' }} annonce{{ 's' if count > 1 else '' }} - top {{ listings|length }}</h1>
+<p class="subtitle">Recherche : utilitaire tôlé, &le; {{ max_price }}€, &ge; {{ min_year }}, &le; {{ max_km }} km, rayon {{ radius_km }} km autour de {{ postal_code }} - {{ generated_at }}</p>
+
+{% for l in listings %}
+<div class="card">
+  {% if l.image_url %}<img src="{{ l.image_url }}" alt="">{% else %}<div style="width:140px;height:100px;background:#f4f4f4;border-radius:6px;"></div>{% endif %}
+  <div class="card-body">
+    <p class="title"><a href="{{ l.url }}">{{ l.title }}</a></p>
+    <p class="meta">
+      <span class="price">{{ "{:,}".format(l.price).replace(",", " ") }} €</span>
+      {% if l.price_delta_pct is not none %}
+        {% if l.price_delta_pct < 0 %}
+          <span class="delta-good">({{ l.price_delta_pct }}% vs marché ~{{ "{:,}".format(l.market_price).replace(",", " ") }} €)</span>
+        {% else %}
+          <span class="delta-bad">(+{{ l.price_delta_pct }}% vs marché)</span>
+        {% endif %}
+      {% endif %}
+      &nbsp;·&nbsp;<span class="score">Score {{ l.score }}/100</span>
+    </p>
+    <p class="meta">
+      {% if l.year %}{{ l.year }}{% endif %}
+      {% if l.km %}· {{ "{:,}".format(l.km).replace(",", " ") }} km{% endif %}
+      {% if l.fuel %}· {{ l.fuel }}{% endif %}
+      {% if l.model_canonical %}· {{ l.model_canonical }}{% endif %}
+    </p>
+    <p class="meta">
+      {% if l.city %}{{ l.city }}{% if l.postal_code %} ({{ l.postal_code }}){% endif %}{% endif %}
+      {% if l.distance_km is not none %}· ~{{ l.distance_km }} km{% endif %}
+      · <em>{{ l.site }}</em>
+      {% if l.seller_type %}· {{ l.seller_type }}{% endif %}
+    </p>
+    {% if l.flags %}
+    <div class="flags">
+      {% for flag in l.flags %}<span class="flag">{{ flag }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<p class="footer">Bot-v-hicule - lancé 2x/jour depuis ton PC. Pour ajuster les critères, édite <code>src/config.py</code>.</p>
+</body>
+</html>
