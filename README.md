@@ -86,17 +86,19 @@ NOTIFY_EMAIL=ton.email@gmail.com
 Le scraper Facebook a besoin que tu te connectes manuellement la première fois.
 Ses cookies sont sauvegardés et réutilisés pour les runs suivants.
 
+> 💡 **Utilise un compte Facebook dédié au bot**, pas ton compte perso. Crée un
+> compte avec une adresse email à part, accepte de mettre Marketplace en mode
+> "vendeur" si demandé. Comme ça si FB bloque l'automatisation, ton vrai compte
+> n'est pas impacté.
+
 ```powershell
 .\venv\Scripts\python.exe scripts\facebook_login.py
 ```
 
-Une fenêtre Chromium s'ouvre. Connecte-toi à Facebook normalement, puis ferme
-la fenêtre. La session est mémorisée dans `data\fb_session\`.
+Une fenêtre Chromium s'ouvre. Connecte-toi avec ton **compte Facebook dédié**,
+puis ferme la fenêtre. La session est mémorisée dans `data\fb_session\`.
 
-> ⚠ **Risque de blocage Facebook** : si FB détecte l'automatisation, ton compte
-> peut être bloqué temporairement. Pour limiter le risque, le bot est limité à
-> **1 visite Marketplace toutes les 12h**, mais le risque n'est pas nul. Si ça
-> arrive, crée un compte FB secondaire et refais l'étape 5.
+Si la session expire (ça arrive tous les ~3 mois), refais cette étape.
 
 ### 6. Test manuel
 
