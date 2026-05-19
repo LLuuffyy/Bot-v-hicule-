@@ -63,7 +63,7 @@ class BaseScraper(abc.ABC):
 
 
 def http_client() -> httpx.Client:
-    return httpx.Client(headers=DEFAULT_HEADERS, timeout=20.0, follow_redirects=True, http2=True)
+    return httpx.Client(headers=DEFAULT_HEADERS, timeout=20.0, follow_redirects=True)
 
 
 def paginate(start: int = 1) -> Iterator[int]:
