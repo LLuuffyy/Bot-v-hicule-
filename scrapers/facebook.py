@@ -68,6 +68,7 @@ class FacebookScraper(BaseScraper):
                 humanlike_pause(2, 3.5)
 
             html = page.content()
+            self.save_debug(1, html)
             listings.extend(self._parse(html))
         return listings
 

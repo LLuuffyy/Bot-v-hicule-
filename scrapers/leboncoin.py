@@ -59,6 +59,7 @@ class LeBonCoinScraper(BaseScraper):
                     break
                 humanlike_pause()
                 html = page.content()
+                self.save_debug(page_num, html)
                 page_listings = self._parse(html)
                 if not page_listings:
                     break

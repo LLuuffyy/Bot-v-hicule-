@@ -48,6 +48,7 @@ class LeParkingScraper(BaseScraper):
                 except Exception as exc:  # noqa: BLE001
                     log.warning("[%s] page %d: %s", self.name, page_num, exc)
                     break
+                self.save_debug(page_num, resp.text)
                 page_listings = self._parse(resp.text)
                 if not page_listings:
                     break

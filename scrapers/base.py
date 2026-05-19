@@ -8,12 +8,13 @@ from __future__ import annotations
 
 import abc
 import logging
+import os
 import time
 from typing import Iterator
 
 import httpx
 
-from src.config import MAX_PAGES_PER_SCRAPER, RATE_LIMIT_SECONDS
+from src.config import DATA_DIR, MAX_PAGES_PER_SCRAPER, RATE_LIMIT_SECONDS
 from src.models import Listing
 
 
@@ -42,6 +43,20 @@ class BaseScraper(abc.ABC):
     def __init__(self) -> None:
         self.rate_limit = RATE_LIMIT_SECONDS
         self.max_pages = MAX_PAGES_PER_SCRAPER
+
+    def save_debug(self, page_num: int, html: str) -> None:
+        """Dump raw HTML for calibration when BOT_DEBUG_HTML=1.
+
+        Files land in data/debug/<site>_p<page>.html so they can be shared
+        for selector/URL fixing.
+        """
+        if os.getenv("BOT_DEBUG_HTML") != "1":
+            return
+        debug_dir = DATA_DIR / "debug"
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        path = debug_dir / f"{self.name}_p{page_num}.html"
+        path.write_text(html, encoding="utf-8", errors="replace")
+        log.info("[%s] debug HTML saved → %s", self.name, path)
 
     @abc.abstractmethod
     def fetch(self) -> list[Listing]:

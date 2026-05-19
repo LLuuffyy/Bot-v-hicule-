@@ -209,6 +209,27 @@ Bot-v-hicule/
 └── data/                      # Gitignored (DB, logs, FB session)
 ```
 
+## Calibration des scrapers (1ère mise en route)
+
+Les paramètres d'URL et sélecteurs CSS des 10 sites ont été écrits à partir
+de patterns courants mais doivent être validés contre les vrais sites depuis
+**ton** IP résidentielle (depuis un datacenter, beaucoup de sites renvoient
+403/404). Procédure :
+
+```powershell
+# Active le mode debug : sauvegarde le HTML brut de chaque site
+$env:BOT_DEBUG_HTML = "1"
+.\venv\Scripts\python.exe -m src.main --dry-run --verbose
+```
+
+Pour chaque site qui retourne 0 annonce alors que tu vois des annonces en le
+visitant dans ton navigateur, un fichier `data\debug\<site>_p1.html` est créé.
+Envoie-moi ces fichiers (ou colle leur contenu) + l'URL exacte de recherche
+que tu utilises sur le site → j'ajuste l'URL et les sélecteurs précisément.
+
+On itère site par site jusqu'à ce que les 10 (ou le maximum atteignable)
+ramènent des annonces. Compte 1 à 2 allers-retours.
+
 ## Maintenance
 
 - **Tests unitaires** : `.\venv\Scripts\python.exe -m pytest tests/ -v`
